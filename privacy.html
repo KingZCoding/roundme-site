@@ -12,6 +12,9 @@
   SECTION 5 (How long we keep it) must match the periods in the constants block of
   private.run_retention_cleanup (supabase migration 20261016200000 and later). Change
   both in the same commit, and keep the copy in the roundme-legal repo byte-identical.
+  The App error reports rows (sections 1 and 5) must match the columns of public.client_errors
+  and c_client_errors_after / c_client_error_limits_after in private.run_retention_cleanup
+  (supabase migration 20261019235500).
   The re-signup block (3 years, sections 5 and 6) must match
   private.resignup_block_limits (supabase migration 20261016220000).
   CONTACT EMAIL appears in several places: search for "traenknercody@gmail.com".
@@ -33,7 +36,7 @@
 <body>
 <main>
 <h1>RoundMe Privacy Policy</h1>
-<p class="meta">Last updated: October 17, 2026</p>
+<p class="meta">Last updated: October 20, 2026</p>
 
 <p>RoundMe is a social app for meeting people nearby. It is run by Dark Matter ITS in New Jersey, USA ("we", "us"). This policy explains what we collect, why, who sees it, and the choices you have. RoundMe is for people 18 and older.</p>
 
@@ -47,6 +50,7 @@
 <tr><td>Location</td><td>Your location, only while the app is open (never in the background), used to find people and posts near you. Before we store it, we round it to the middle of a square about a quarter of a mile across, so we never keep your exact position. It is stored privately and never shown to other people. They see only your town and a rough distance such as "within 5 miles". A post you make remembers where it was made (also rounded), in the same private way.</td></tr>
 <tr><td>Content and activity</td><td>Posts, replies, likes, chat messages, friend requests, swipes, matches and guesses in the Meet game, people you block, and reports you file.</td></tr>
 <tr><td>Device and notifications</td><td>A push-notification token for your phone and basic device information, so we can send notifications you have allowed.</td></tr>
+<tr><td>App error reports</td><td>If the app crashes or hits an error, it sends us a short report: the error message and technical trace, the screen you were on, your app version, update and operating system, and when and how often it happened. Each report carries a random code the app makes the first time it opens. The code is not your account and other users never see it, but it identifies your copy of the app, so we treat it as personal information. We do not store your name or account with the report. We remove email addresses, sign-in tokens and long numbers from the text before keeping it, but this is not perfect, so a report could still contain something personal. We also keep a counter for your account, with no report content in it, to stop one account sending too many reports.</td></tr>
 <tr><td>Technical data</td><td>Our hosting provider keeps standard server logs (such as IP address and request times) for security and troubleshooting.</td></tr>
 </table>
 
@@ -86,6 +90,7 @@
 <tr><td>Reports we reviewed and dismissed, and our record of that decision</td><td>12 months after the decision</td></tr>
 <tr><td>Reports that led to action, and our other moderation records (for example, a suspension)</td><td>3 years after the decision or the record</td></tr>
 <tr><td>A one-way scrambled code of the email address of an account we deleted after a serious or repeated violation of our Terms. It cannot be turned back into the address.</td><td>3 years</td></tr>
+<tr><td>App error reports (see section 1)</td><td>30 days after the same error last happened, so an error that keeps happening is kept while it keeps happening. These reports are not linked to your account, so deleting your account does not remove them earlier. The per-account counter that limits reports is deleted after 1 day, or with your account.</td></tr>
 </table>
 <p>A report still being reviewed is kept until we decide it. We may keep a report longer if it involves a serious safety concern or a legal request.</p>
 <ul>
