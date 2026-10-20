@@ -1,12 +1,12 @@
-# RoundMe Legal
+# RoundMe Site
 
-This repository is the static website at https://roundme.darkmatterits.com. It holds RoundMe's privacy policy and terms of service, the home page, and the page that emailed sign-in links open when the app is not installed. It is plain HTML with no build step and no package manager. The code is proprietary software of Dark Matter ITS; see `LICENSE`.
+This repository is RoundMe's public website at https://roundme.darkmatterits.com. It holds the landing page, the privacy policy and terms of service, and the page that emailed sign-in links open when the app is not installed. (It was named `roundme-legal` when it only held the legal pages.) It is plain HTML with no build step and no package manager. The code is proprietary software of Dark Matter ITS; see `LICENSE`.
 
 ## Files
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | The site's home page. |
+| `index.html` | The landing page. One self-contained file with no JavaScript. The phone screens in its carousel are drawn in HTML/CSS with made-up people; the header comment in the file explains how to keep them in step with the app. |
 | `privacy.html` | The privacy policy. |
 | `terms.html` | The terms of service. |
 | `auth-callback/index.html` | What a browser shows at `/auth-callback` when an emailed sign-in link is opened somewhere other than the app (see Android App Links below). |
@@ -17,14 +17,14 @@ This repository is the static website at https://roundme.darkmatterits.com. It h
 
 ## How it fits with the other repositories
 
-RoundMe is three independent git repositories kept as sibling folders: `roundMe` (the mobile app and the Supabase backend), `roundme-admin` (the moderation console) and `roundme-legal` (this site). The app's emailed sign-in links point at `/auth-callback` on this site, and the privacy and terms pages are also stored in the `legal/` folder of `roundMe`.
+RoundMe is three independent git repositories kept as sibling folders: `roundMe` (the mobile app and the Supabase backend), `roundme-admin` (the moderation console) and `roundme-site` (this site). The app's emailed sign-in links point at `/auth-callback` on this site, and the privacy and terms pages are also stored in the `legal/` folder of `roundMe`.
 
 ## Keeping the two copies identical
 
 `privacy.html` and `terms.html` exist in this repository and in the `legal/` folder of `roundMe` on purpose. Keep each pair byte-identical: when you change one, make the same change in the other copy, then compare them in PowerShell from the `roundMe` folder:
 
 ```powershell
-Get-FileHash legal\privacy.html, ..\roundme-legal\privacy.html, legal\terms.html, ..\roundme-legal\terms.html
+Get-FileHash legal\privacy.html, ..\roundme-site\privacy.html, legal\terms.html, ..\roundme-site\terms.html
 ```
 
 The first two hashes must match, and so must the last two.
