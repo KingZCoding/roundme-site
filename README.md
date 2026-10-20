@@ -15,6 +15,7 @@ This repository is RoundMe's public website at https://roundme.darkmatterits.com
 | `og.png` | The 1200x630 picture shown when a link to the site is shared in a message or chat. The `og:` and `twitter:` tags in `index.html` point at it. Chat apps cache previews, so a changed picture can take a while to show up. |
 | `robots.txt`, `sitemap.xml` | For search engines. The sitemap lists the public pages: add a line to it when you add a page. |
 | `404.html` | What GitHub Pages shows for an address that does not exist. Not indexed. |
+| `googleff7244ec7b792c24.html` | Google Search Console ownership file, plus a matching `google-site-verification` meta tag in the `<head>` of `index.html`. Do not delete either: Google re-checks them. |
 | `CNAME` | The custom domain, `roundme.darkmatterits.com`. GitHub Pages reads it. Do not delete or edit it unless the domain changes. |
 | `.nojekyll` | An empty file that tells GitHub Pages to publish the files as they are, without Jekyll processing. Keep it. |
 | `LICENSE` | The proprietary notice. |
