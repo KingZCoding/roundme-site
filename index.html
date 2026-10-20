@@ -464,6 +464,25 @@
   .heart-badge svg { width: 28px; height: 28px; fill: #ff7a45; stroke: #ff7a45; stroke-width: 1.5; stroke-linejoin: round; }
   .match { position: absolute; z-index: 4; left: 50%; bottom: 4.5%; transform: translateX(-50%); padding: 11px 22px; border-radius: 999px; background: #fff; color: #2b1a12; font-weight: 800; white-space: nowrap; box-shadow: 0 14px 26px -10px rgba(43, 26, 18, .5); }
 
+  /* ---------- How it works: three steps, each with a tiny drawn preview ---------- */
+  .how { background: var(--soft); border-block: 1px solid var(--line); }
+  .steps { list-style: none; margin: 36px 0 0; padding: 0; display: grid; gap: 22px; counter-reset: step; }
+  @media (min-width: 860px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 28px; } }
+  .step { counter-increment: step; position: relative; padding: 26px 24px 28px; border-radius: 28px; background: var(--bg); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  /* The big number is decoration; the heading already says what the step is. */
+  .step::before { content: counter(step); display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 18px; border-radius: 50%; background: linear-gradient(135deg, var(--coral), var(--gold)); color: #2b1a12; font-weight: 800; font-size: 1.15rem; }
+  .step h3 { margin: 0 0 6px; font-size: 1.3rem; letter-spacing: -.02em; }
+  .step p { margin: 0 0 20px; color: var(--muted); }
+  .mini { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 64px; padding: 14px; border-radius: 18px; background: var(--soft); border: 1px solid var(--line); font-size: .9rem; font-weight: 700; }
+  .mini .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--muted); }
+  .mini .chip.on { background: var(--coral); border-color: var(--coral); color: #2b1a12; }
+  .mini .rnd { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); }
+  .mini .rnd.like { background: var(--coral); border-color: var(--coral); }
+  .mini .rnd svg { width: 18px; height: 18px; fill: none; stroke: var(--fg); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .mini .rnd.like svg { fill: #2b1a12; stroke: #2b1a12; }
+  .mini .bub { padding: 8px 14px; border-radius: 16px 16px 16px 4px; background: var(--bg); border: 1px solid var(--line); }
+  .mini .bub.me { border-radius: 16px 16px 4px 16px; background: var(--coral); border-color: var(--coral); color: #2b1a12; }
+
   /* A calm row of the smaller features. Plain text on purpose, no icon tiles. */
   .also { padding: 56px 0 84px; }
   .also-grid { display: grid; gap: 28px 56px; margin-top: 28px; }
@@ -975,6 +994,32 @@
         </div>
       </article>
 
+    </div>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <!-- Keep these steps true to the app: sign-up, Locals/Meet, then Chat after a match. -->
+  <section id="how" class="how">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2>From hello to coffee in <span class="grad-text">three steps.</span></h2>
+      <ol class="steps">
+        <li class="step">
+          <h3>Make your profile</h3>
+          <p>Sign up with your email, tell people a little about you, and choose how far you want to look.</p>
+          <div class="mini" aria-hidden="true"><span class="chip">5 mi</span><span class="chip">10 mi</span><span class="chip on">25 mi</span></div>
+        </li>
+        <li class="step">
+          <h3>See who is nearby</h3>
+          <p>Browse Locals, closest first, or swipe through people in Meet. Like the ones you want to know.</p>
+          <div class="mini" aria-hidden="true"><span class="rnd"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span class="rnd like"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span></div>
+        </li>
+        <li class="step">
+          <h3>Say hello</h3>
+          <p>When you both like each other, it is a match and you can start chatting. Meet up on your terms.</p>
+          <div class="mini" aria-hidden="true"><span class="bub">Coffee?</span><span class="bub me">Saturday!</span></div>
+        </li>
+      </ol>
     </div>
   </section>
 
