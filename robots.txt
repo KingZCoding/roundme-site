@@ -1,0 +1,7 @@
+# RoundMe site: everything public may be crawled.
+# /auth-callback is kept out of search results by its own noindex tag, so it is not blocked here
+# (blocking it would stop crawlers from ever seeing that tag).
+User-agent: *
+Allow: /
+
+Sitemap: https://roundme.darkmatterits.com/sitemap.xml

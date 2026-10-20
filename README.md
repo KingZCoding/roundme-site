@@ -13,6 +13,8 @@ This repository is RoundMe's public website at https://roundme.darkmatterits.com
 | `.well-known/assetlinks.json` | The file that lets Android hand `https://roundme.darkmatterits.com/auth-callback` links straight to the app. |
 | `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | The tab icon: the app logo (from `assets/branding/` in `roundMe`). The `.ico` also serves `privacy.html` and `terms.html`, which browsers check for at `/favicon.ico`. |
 | `og.png` | The 1200x630 picture shown when a link to the site is shared in a message or chat. The `og:` and `twitter:` tags in `index.html` point at it. Chat apps cache previews, so a changed picture can take a while to show up. |
+| `robots.txt`, `sitemap.xml` | For search engines. The sitemap lists the public pages: add a line to it when you add a page. |
+| `404.html` | What GitHub Pages shows for an address that does not exist. Not indexed. |
 | `CNAME` | The custom domain, `roundme.darkmatterits.com`. GitHub Pages reads it. Do not delete or edit it unless the domain changes. |
 | `.nojekyll` | An empty file that tells GitHub Pages to publish the files as they are, without Jekyll processing. Keep it. |
 | `LICENSE` | The proprietary notice. |
