@@ -30,17 +30,25 @@
   measured in em, where 1em is about 16px of the real app's 390px-wide screen,
   so a phone looks the same at any size. The class "dark" on .screen shows
   the app's dark theme.
-    - Hero phone ........ the Locals screen (also the first carousel slide)
     - Carousel ........... Locals, Meet, Feed, Chat, Profile, in tab order
+  (The hero is NOT a phone: it is the animated night map described below.)
   Keep the screens in step with the real app when the app's screens change.
 
   CAROUSEL: no JavaScript. A horizontal scroll-snap row (swipe on touch,
   trackpad or shift+wheel on desktop, arrow keys when focused). Browsers that
   support scroll-driven animation also grow the phone nearest the centre.
 
-  MOTION: the pulsing rings and floating chips are pure CSS and only switched
-  on inside @media (prefers-reduced-motion: no-preference). The base styles
-  are the still frame, so people who ask for less motion get a calm page.
+  HERO ANIMATION (the .radar panel): pure CSS, one 12 second loop.
+    - rings ping outward from "you" every 4s (.ping)
+    - people fade in as the first ring reaches them (.dot, delay set by --d)
+    - a message from you, the other person typing, then their reply
+      (.msg-you, .typing, .msg-them; the percentages in the keyframes below
+      are positions inside the 12s loop)
+  The base styles are the FINAL still frame (people visible, both messages
+  shown). Animation is only switched on inside
+  @media (prefers-reduced-motion: no-preference), so people who ask their
+  device for less motion get the still frame.
+  The people and the messages are illustration, not real users or data.
 -->
 <style>
   :root {
@@ -55,6 +63,8 @@
     --gold: #ffc845;
     --line: rgba(43, 26, 18, .12);
     --on-coral: #2b1a12;
+    --night-1: #1d2f55; /* radar panel: night map */
+    --night-2: #0d1730;
     --shadow: 0 30px 60px -20px rgba(194, 65, 12, .35), 0 12px 24px -12px rgba(43, 26, 18, .35);
   }
   @media (prefers-color-scheme: dark) {
@@ -123,46 +133,94 @@
   .hero-copy p { max-width: 31rem; margin: 0 0 14px; font-size: 1.2rem; color: var(--muted); }
   .note { font-size: .92rem; color: var(--muted); }
 
-  /* The stage holds the rings, the chips and the hero phone. */
-  .stage { position: relative; display: grid; place-items: center; min-height: 560px; }
-  .ring {
-    position: absolute; left: 50%; top: 50%;
-    width: 480px; height: 480px; margin: -240px 0 0 -240px;
-    border: 2px solid rgba(255, 122, 69, .45); border-radius: 50%;
-    transform: scale(.7); opacity: .5;
+  /* ---------- Hero animation: the night map ---------- */
+  .radar {
+    position: relative;
+    width: 100%; max-width: 460px; aspect-ratio: 1;
+    margin: 0 auto;
+    border-radius: 28px;
+    overflow: hidden;
+    background: radial-gradient(120% 120% at 50% 40%, var(--night-1), var(--night-2));
+    border: 1px solid rgba(255, 255, 255, .08);
   }
-  .ring.r2 { transform: scale(.95); opacity: .3; }
-  .ring.r3 { transform: scale(1.2); opacity: .16; }
+  .radar svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* Everything that animates scales around its own centre. */
+  .ping, .halo, .dot { transform-box: fill-box; transform-origin: center; }
+  .ping { opacity: 0; }          /* still frame: no ping ring */
+  .halo { opacity: .25; }
+
   .chip {
-    position: absolute; z-index: 3;
+    position: absolute; left: 16px; top: 16px;
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 14px;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
-    box-shadow: 0 10px 24px -10px rgba(43, 26, 18, .4);
-    font-size: .88rem; font-weight: 700; white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .1);
+    color: #dbe4ff;
+    font-size: .82rem;
   }
-  .chip i { width: 9px; height: 9px; border-radius: 50%; background: #3fb97c; }
-  /* Chips sit beside the phone, not on it, so they never cover the screen. */
-  /* The hero phone is always 300px wide, so "50% + 160px" is just outside its edge. */
-  .chip.c1 { right: calc(50% + 160px); top: 24%; }
-  .chip.c2 { left: calc(50% + 160px); top: 50%; }
-  .chip.c3 { right: calc(50% + 150px); bottom: 10%; }
-  /* Narrow screens have no room beside the phone, so the chips rest on its
-     empty lower half (the list ends well above the tab bar). */
-  @media (max-width: 900px) {
-    .chip.c1 { right: auto; left: 50%; margin-left: -110px; top: auto; bottom: 15%; }
-    .chip.c2, .chip.c3 { display: none; }
+  .chip b { width: 8px; height: 8px; border-radius: 50%; background: #3ec9b0; }
+
+  .bubble {
+    position: absolute; margin: 0;
+    padding: 9px 13px;
+    max-width: 56%;
+    border-radius: 16px;
+    font-size: .88rem; line-height: 1.35;
   }
-  @keyframes pulse { 0% { transform: scale(.45); opacity: .6; } 100% { transform: scale(1.25); opacity: 0; } }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .msg-you  { right: 7%; top: 66%; background: #c8431a; color: #fff; border-bottom-right-radius: 5px; transform-origin: 100% 100%; }
+  .msg-them { left: 7%;  top: 15%; background: #fff; color: #17191f; border-bottom-left-radius: 5px; transform-origin: 0 100%; }
+  .typing   { left: 7%;  top: 15%; display: none; gap: 4px; padding: 13px 14px; background: #fff; border-bottom-left-radius: 5px; transform-origin: 0 100%; }
+  .typing i { display: block; width: 6px; height: 6px; border-radius: 50%; background: #8b93a7; }
+
+  @keyframes ping {
+    0%   { transform: scale(.06); opacity: .8; }
+    70%  { transform: scale(1);   opacity: 0; }
+    100% { transform: scale(1);   opacity: 0; }
+  }
+  @keyframes halo {
+    0%   { transform: scale(1);   opacity: .4; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes dot {
+    0%   { opacity: 0; transform: scale(0); }
+    3%   { opacity: 1; transform: scale(1.3); }
+    5%   { opacity: 1; transform: scale(1); }
+    88%  { opacity: 1; transform: scale(1); }
+    95%  { opacity: 0; transform: scale(.6); }
+    100% { opacity: 0; transform: scale(0); }
+  }
+  @keyframes msgYou {
+    0%, 24% { opacity: 0; transform: translateY(6px) scale(.85); }
+    28%, 80% { opacity: 1; transform: none; }
+    86%, 100% { opacity: 0; transform: translateY(-4px) scale(.95); }
+  }
+  @keyframes typing {
+    0%, 40% { opacity: 0; transform: scale(.85); }
+    43%, 50% { opacity: 1; transform: none; }
+    52%, 100% { opacity: 0; transform: none; }
+  }
+  @keyframes msgThem {
+    0%, 52% { opacity: 0; transform: translateY(6px) scale(.85); }
+    55%, 80% { opacity: 1; transform: none; }
+    86%, 100% { opacity: 0; transform: translateY(-4px) scale(.95); }
+  }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+  }
+
   @media (prefers-reduced-motion: no-preference) {
-    html { scroll-behavior: smooth; }
-    .ring { animation: pulse 6s ease-out infinite; }
-    .ring.r2 { animation-delay: 2s; }
-    .ring.r3 { animation-delay: 4s; }
-    .chip { animation: float 5s ease-in-out infinite; }
-    .chip.c2 { animation-delay: 1.2s; }
-    .chip.c3 { animation-delay: 2.4s; }
+    .ping { animation: ping 4s ease-out infinite; }
+    .ping.p2 { animation-delay: 2s; }
+    .halo { animation: halo 2s ease-out infinite; }
+    .dot { animation: dot 12s var(--d, 0s) infinite both; }
+    .msg-you { animation: msgYou 12s infinite both; }
+    .typing { display: flex; animation: typing 12s infinite both; }
+    .msg-them { animation: msgThem 12s infinite both; }
+    .typing i { animation: bounce 1s ease-in-out infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; }
+    .typing i:nth-child(3) { animation-delay: .3s; }
   }
 
   /* ---------- The phone ---------- */
@@ -423,37 +481,55 @@
         <span class="note">Android first. For people 18 and older.</span>
       </div>
 
-      <div class="stage">
-        <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
-        <span class="chip c1"><i></i>Maya is under 1 mi away</span>
-        <span class="chip c2"><i></i>New match</span>
-        <span class="chip c3"><i></i>3 people posted nearby</span>
+      <div class="radar" role="img" aria-label="Animation: people appear on a map around you as a ring spreads out, then you send a message and one of them replies.">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#ff6a3d" stop-opacity=".35"/>
+              <stop offset="1" stop-color="#ff6a3d" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
 
-        <!-- Hero phone: the Locals screen. Same content as the first carousel slide. -->
-        <div class="phone" style="--w: 300px" role="img" aria-label="The RoundMe Locals screen: a list of nearby people, closest first, each with a rough distance.">
-          <div class="screen" aria-hidden="true">
-            <div class="status"><span>9:41</span><b></b></div>
-            <div class="body">
-              <div class="title">Locals</div>
-              <div class="chips"><span class="pill">5 mi</span><span class="pill">10 mi</span><span class="pill on">25 mi</span><span class="pill">50 mi</span></div>
-              <div class="row"><i class="av a1">M</i><div class="t"><b>Maya, 27</b><small>under 1 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a2">D</i><div class="t"><b>Devon, 31</b><small>1-2 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a3">P</i><div class="t"><b>Priya, 24</b><small>1-2 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a4">M</i><div class="t"><b>Marcus, 29</b><small>2-3 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a5">L</i><div class="t"><b>Lena, 26</b><small>2-3 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a6">T</i><div class="t"><b>Theo, 33</b><small>3-4 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a7">S</i><div class="t"><b>Sam, 28</b><small>4-5 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-              <div class="row"><i class="av a1">N</i><div class="t"><b>Nora, 30</b><small>5-10 mi</small></div><svg class="go"><use href="#i-go"/></svg></div>
-            </div>
-            <div class="tabs">
-              <span class="tab"><svg><use href="#i-feed"/></svg>Feed</span>
-              <span class="tab on"><svg><use href="#i-pin"/></svg>Locals</span>
-              <span class="tab"><svg><use href="#i-heart"/></svg>Meet</span>
-              <span class="tab"><svg><use href="#i-chat"/></svg>Chat</span>
-              <span class="tab"><svg><use href="#i-person"/></svg>Profile</span>
-            </div>
-          </div>
-        </div>
+          <!-- Faint streets so it reads as a map. -->
+          <g fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="10" stroke-linecap="round">
+            <path d="M-10 300 C 90 250 190 330 410 255"/>
+            <path d="M70 -10 C 110 120 60 250 120 410"/>
+            <path d="M-10 110 L 410 160"/>
+            <path d="M300 -10 C 280 140 340 260 310 410"/>
+          </g>
+          <g fill="none" stroke="#ffffff" stroke-opacity=".06" stroke-width="3" stroke-linecap="round">
+            <path d="M-10 205 L 410 220"/>
+            <path d="M190 -10 L 205 410"/>
+            <path d="M-10 40 C 120 70 260 30 410 70"/>
+          </g>
+
+          <!-- You are at the centre (200, 215). -->
+          <circle cx="200" cy="215" r="130" fill="url(#glow)"/>
+          <g fill="none" stroke="#9db4ff" stroke-opacity=".28" stroke-width="1.2">
+            <circle cx="200" cy="215" r="60"/>
+            <circle cx="200" cy="215" r="115"/>
+            <circle cx="200" cy="215" r="170" stroke-dasharray="3 6"/>
+          </g>
+          <circle class="ping" cx="200" cy="215" r="170" fill="none" stroke="#ff6a3d" stroke-width="2"/>
+          <circle class="ping p2" cx="200" cy="215" r="170" fill="none" stroke="#ff6a3d" stroke-width="2"/>
+
+          <!-- People nearby. --d is when each one appears (nearest first). -->
+          <g class="dot" style="--d:.6s"><circle cx="255" cy="175" r="16" fill="#3ec9b0" fill-opacity=".22"/><circle cx="255" cy="175" r="8" fill="#3ec9b0"/></g>
+          <g class="dot" style="--d:1.2s"><circle cx="310" cy="235" r="16" fill="#ffc857" fill-opacity=".22"/><circle cx="310" cy="235" r="8" fill="#ffc857"/></g>
+          <g class="dot" style="--d:1.5s"><circle cx="110" cy="135" r="16" fill="#ff8fab" fill-opacity=".22"/><circle cx="110" cy="135" r="8" fill="#ff8fab"/></g>
+          <g class="dot" style="--d:1.6s"><circle cx="95" cy="285" r="16" fill="#a78bfa" fill-opacity=".22"/><circle cx="95" cy="285" r="8" fill="#a78bfa"/></g>
+          <g class="dot" style="--d:1.8s"><circle cx="165" cy="345" r="16" fill="#7ee081" fill-opacity=".22"/><circle cx="165" cy="345" r="8" fill="#7ee081"/></g>
+          <g class="dot" style="--d:2s"><circle cx="305" cy="95" r="16" fill="#6bb7ff" fill-opacity=".22"/><circle cx="305" cy="95" r="8" fill="#6bb7ff"/></g>
+
+          <!-- You. -->
+          <circle class="halo" cx="200" cy="215" r="14" fill="#ff6a3d"/>
+          <circle cx="200" cy="215" r="9" fill="#ff6a3d" stroke="#ffffff" stroke-width="3"/>
+        </svg>
+
+        <span class="chip"><b></b>Near you</span>
+        <div class="bubble msg-you">Hey, looks like we're close by.</div>
+        <div class="bubble typing"><i></i><i></i><i></i></div>
+        <div class="bubble msg-them">Ha, small world. Coffee?</div>
       </div>
     </div>
   </div>
