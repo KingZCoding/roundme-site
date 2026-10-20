@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RoundMe: meet the people around you</title>
-<meta name="description" content="RoundMe shows you who is nearby and lets you meet them on your terms. Locals, a swipe game, a live feed and chat. Coming soon to Android.">
+<title>RoundMe: Meet People Near You | Local Social App for Android</title>
+<meta name="description" content="RoundMe shows you who is nearby and lets you meet them on your terms. Locals, a swipe game, a live feed and chat. Android app for adults 18+, coming soon.">
+<link rel="canonical" href="https://roundme.darkmatterits.com/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="application-name" content="RoundMe">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#100c0a">
 <!-- Tab icon: the app logo. The .ico is for old browsers and for crawlers that ask for /favicon.ico. -->
@@ -15,21 +18,65 @@
      og.png is 1200x630; to change it, redraw it and keep the filename. -->
 <meta property="og:site_name" content="RoundMe">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://roundme.darkmatterits.com/">
-<meta property="og:title" content="RoundMe: meet the people around you">
+<meta property="og:title" content="RoundMe: Meet People Near You">
 <meta property="og:description" content="See who is nearby and meet them on your terms. Locals, a swipe game, a live feed and chat. Coming soon to Google Play.">
 <meta property="og:image" content="https://roundme.darkmatterits.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The RoundMe app on a phone, with the headline: Meet the people around you.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RoundMe: meet the people around you">
+<meta name="twitter:title" content="RoundMe: Meet People Near You">
 <meta name="twitter:description" content="See who is nearby and meet them on your terms. Coming soon to Google Play.">
 <meta name="twitter:image" content="https://roundme.darkmatterits.com/og.png">
+<meta name="twitter:image:alt" content="The RoundMe app on a phone, with the headline: Meet the people around you.">
+<!-- Structured data for search engines (schema.org). It is data, not a script that runs, so the
+     page still has no JavaScript. Keep it true: add "offers" and a Google Play URL only once the app is live. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://roundme.darkmatterits.com/#publisher",
+      "name": "Dark Matter ITS"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://roundme.darkmatterits.com/#website",
+      "url": "https://roundme.darkmatterits.com/",
+      "name": "RoundMe",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://roundme.darkmatterits.com/#publisher"
+      }
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": "https://roundme.darkmatterits.com/#app",
+      "name": "RoundMe",
+      "url": "https://roundme.darkmatterits.com/",
+      "operatingSystem": "Android",
+      "applicationCategory": "SocialNetworkingApplication",
+      "description": "RoundMe shows you who is nearby and lets you meet them on your terms, with Locals, a swipe game, a live feed and chat. For people 18 and older.",
+      "image": "https://roundme.darkmatterits.com/og.png",
+      "audience": {
+        "@type": "PeopleAudience",
+        "suggestedMinAge": 18
+      },
+      "publisher": {
+        "@id": "https://roundme.darkmatterits.com/#publisher"
+      }
+    }
+  ]
+}
+</script>
 <!--
   index.html: the RoundMe landing page, hosted by GitHub Pages at
   https://roundme.darkmatterits.com (see the CNAME file). One self-contained
-  file: no external fonts, scripts or trackers, and no JavaScript at all. The page itself
+  file: no external fonts, scripts or trackers, and no JavaScript at all (the JSON-LD block in the
+  head is search-engine data, not code). The page itself
   uses no image files; the only images are the tab icons and the link-preview card
   (favicon.svg, favicon.ico, apple-touch-icon.png, og.png) named in the <head>.
 
