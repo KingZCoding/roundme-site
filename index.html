@@ -30,7 +30,7 @@
   measured in em, where 1em is about 16px of the real app's 390px-wide screen,
   so a phone looks the same at any size. The class "dark" on .screen shows
   the app's dark theme.
-    - Carousel ........... Locals, Meet, Feed, Chat, Profile, in tab order
+    - Showcase ........... Locals, Meet, Feed, Chat, Profile, in tab order
   (The hero phone is the same screens, stacked and cross-faded: see HERO below.)
   Keep the screens in step with the real app when the app's screens change.
 
@@ -43,9 +43,11 @@
   drawn light and flipped dark with a CSS filter (.map svg). To use real photos later, swap the contents
   of each <figure class="art"> for an <img> (keep the figure and its aria-label).
 
-  CAROUSEL: no JavaScript. A horizontal scroll-snap row (swipe on touch,
-  trackpad or shift+wheel on desktop, arrow keys when focused). Browsers that
-  support scroll-driven animation also grow the phone nearest the centre.
+  SHOWCASE ("See the app"): no JavaScript. One phone runs through the five
+  tabs (Locals, Meet, Feed, Chat, Profile) on a 25 second loop, 5 seconds each.
+  Every screen (.show) and caption (.cap) gets a delay of --i x 5s on the same
+  25s clock, so they stay in step. Reduced motion shows the Locals screen and
+  every caption fully open. Hovering pauses the loop.
 
   HERO: a full-width golden-hour map (.radar-bg, an inline SVG; deep ember in dark
   mode, see the --h-* variables on .hero) with a phone in front
@@ -55,7 +57,7 @@
     - a message from you, the other person typing, then their reply
       (.msg-you, .typing, .msg-them; keyframe percentages are positions in the 12s loop)
     - the phone cross-fades Locals -> Meet -> Chat on a 15s loop (.scrA/.scrB/.scrC)
-  The hero phone's three screens are copies of carousel slides 1, 2 and 4;
+  The hero phone's three screens are copies of showcase screens 1, 2 and 4;
   keep them in step when the app changes.
   The base styles are the FINAL still frame (people visible, both messages shown,
   Locals screen on the phone). Animation is only switched on inside
@@ -163,7 +165,7 @@
   .hero-phone { --w: 290px; position: relative; z-index: 3; transform: rotate(4deg); box-shadow: var(--h-shadow); }
   @media (min-width: 940px) { .hero-phone { --w: 330px; } }
   /* Three app screens stacked in the same spot; they take turns being visible. */
-  .cycle { position: relative; height: 100%; border-radius: 2.25em; overflow: hidden; }
+  .cycle { position: relative; height: 100%; border-radius: 2.25em; overflow: hidden; background: #14100e; }
   .scr { position: absolute; inset: 0; height: auto; opacity: 0; }
   .scrA { opacity: 1; }            /* still frame: the Locals screen */
 
@@ -369,26 +371,32 @@
   section h2 { margin: 0 0 12px; font-size: clamp(2rem, 4.6vw, 3rem); line-height: 1.05; letter-spacing: -.04em; }
   .lead { margin: 0 0 8px; color: var(--muted); max-width: 38rem; font-size: 1.1rem; }
 
-  /* ---------- Carousel ---------- */
+  /* ---------- Showcase: one phone, five screens, on a 25s loop ---------- */
   .showcase { background: var(--soft); border-block: 1px solid var(--line); overflow: hidden; }
-  .carousel {
-    display: flex; gap: 28px;
-    margin-top: 36px; padding: 28px max(20px, calc((100vw - 1080px) / 2)) 40px;
-    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: max(20px, calc((100vw - 1080px) / 2));
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin; scrollbar-color: var(--coral) transparent;
-  }
-  .slide { flex: 0 0 auto; scroll-snap-align: center; width: 264px; text-align: center; }
-  .slide .phone { --w: 264px; margin: 0 auto 22px; }
-  .slide h3 { margin: 0 0 4px; font-size: 1.15rem; letter-spacing: -.02em; }
-  .slide p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.45; }
-  .hint { margin: 4px 0 0; font-size: .9rem; color: var(--muted); }
-  /* Where supported, the phone nearest the middle grows a little as you scroll. */
-  @supports (animation-timeline: view()) {
-    @keyframes focus { 0%, 100% { transform: scale(.9); opacity: .65; } 50% { transform: scale(1); opacity: 1; } }
-    @media (prefers-reduced-motion: no-preference) {
-      .slide .phone { animation: focus linear both; animation-timeline: view(inline); }
-    }
+  .demo { display: grid; gap: 40px; align-items: center; margin-top: 44px; }
+  @media (min-width: 860px) { .demo { grid-template-columns: 1fr auto; gap: 96px; } .demo-phone { order: 2; } }
+  .demo-phone { position: relative; display: grid; place-items: center; padding: 20px 0; }
+  /* A warm glow behind the phone so it feels lit, not pasted on. */
+  .demo-phone::before { content: ""; position: absolute; inset: -10% -25%; background: radial-gradient(closest-side, rgba(255, 122, 69, .26), transparent 72%); pointer-events: none; }
+  .demo-device { --w: 300px; }
+  @media (min-width: 860px) { .demo-device { --w: 340px; } }
+  /* Still frame (and reduced motion): Locals on the phone, every caption fully shown. */
+  .show:first-child { opacity: 1; }
+  .caps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .cap { position: relative; padding: 18px 0 20px 26px; border-left: 2px solid var(--line); }
+  .cap h3 { margin: 0 0 4px; font-size: 1.5rem; letter-spacing: -.03em; }
+  .cap p { margin: 0; color: var(--muted); max-width: 26rem; }
+  /* The coral bar that fills while this caption's screen is showing. */
+  .cap::before { content: ""; position: absolute; left: -2px; top: 0; bottom: 0; width: 2px; background: var(--coral); transform-origin: top; transform: scaleY(0); }
+  .showcase .cap:first-child::before { transform: scaleY(1); }
+  @keyframes shot { 0% { opacity: 0; } 3%, 20% { opacity: 1; } 23%, 100% { opacity: 0; } }
+  @keyframes capOn { 0% { opacity: .4; max-height: 3.8rem; } 3%, 20% { opacity: 1; max-height: 12rem; } 23%, 100% { opacity: .4; max-height: 3.8rem; } }
+  @keyframes capBar { 0% { transform: scaleY(0); } 20% { transform: scaleY(1); } 20.01%, 100% { transform: scaleY(0); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .show { animation: shot 25s linear infinite backwards; animation-delay: calc(var(--i) * 5s); }
+    .cap { overflow: hidden; animation: capOn 25s linear infinite backwards; animation-delay: calc(var(--i) * 5s); }
+    .cap::before, .showcase .cap:first-child::before { animation: capBar 25s linear infinite backwards; animation-delay: calc(var(--i) * 5s); }
+    .showcase:hover .show, .showcase:hover .cap, .showcase:hover .cap::before { animation-play-state: paused; }
   }
 
   /* ---------- Illustrated stories (see the ILLUSTRATIONS note at the top) ---------- */
@@ -662,16 +670,16 @@
     <div class="wrap">
       <p class="kicker">See the app</p>
       <h2>Five tabs. One idea: who is <span class="grad-text">around you.</span></h2>
-      <p class="lead">Swipe through the screens. The people and posts shown are made up, for illustration.</p>
-      <p class="hint">Swipe or scroll sideways &rarr;</p>
-    </div>
+      <p class="lead">The people and posts shown are made up, for illustration.</p>
 
-    <!-- tabindex lets keyboard users focus the row and scroll it with the arrow keys. -->
-    <div class="carousel" tabindex="0" role="region" aria-label="RoundMe screens, scroll sideways">
-
-      <figure class="slide" style="margin:0">
-        <div class="phone" role="img" aria-label="Locals: people near you, closest first.">
-          <div class="screen dark" aria-hidden="true">
+      <!-- One phone that runs through the five tabs on its own (25s loop, 5s each).
+           The captions share the same clock, so the one on the left always matches
+           the screen. Hovering pauses everything. See SHOWCASE in the header note. -->
+      <div class="demo">
+        <div class="demo-phone">
+          <div class="phone demo-device" role="img" aria-label="The RoundMe app running on a phone, moving through Locals, Meet, Live Feed, Chat and Your profile.">
+            <div class="cycle">
+<div class="screen dark scr show" style="--i:0" aria-hidden="true">
             <div class="status"><span>9:41</span><b></b></div>
             <div class="body">
               <div class="title">Locals</div>
@@ -693,13 +701,7 @@
               <span class="tab"><svg><use href="#i-person"/></svg>Profile</span>
             </div>
           </div>
-        </div>
-        <figcaption><h3>Locals</h3><p>Everyone nearby, closest first, with a rough distance.</p></figcaption>
-      </figure>
-
-      <figure class="slide" style="margin:0">
-        <div class="phone" role="img" aria-label="Meet: a swipe card with pass and like buttons, and a banner for the guessing game.">
-          <div class="screen dark" aria-hidden="true">
+<div class="screen dark scr show" style="--i:1" aria-hidden="true">
             <div class="status"><span>9:41</span><b></b></div>
             <div class="body">
               <div class="title">Meet</div>
@@ -719,13 +721,7 @@
               <span class="tab"><svg><use href="#i-person"/></svg>Profile</span>
             </div>
           </div>
-        </div>
-        <figcaption><h3>Meet</h3><p>Swipe, match when it is mutual, and play the guessing game.</p></figcaption>
-      </figure>
-
-      <figure class="slide" style="margin:0">
-        <div class="phone" role="img" aria-label="Feed: posts from people near you, including a question card.">
-          <div class="screen dark" aria-hidden="true">
+<div class="screen dark scr show" style="--i:2" aria-hidden="true">
             <div class="status"><span>9:41</span><b></b></div>
             <div class="body">
               <div class="title">Feed</div>
@@ -755,13 +751,7 @@
               <span class="tab"><svg><use href="#i-person"/></svg>Profile</span>
             </div>
           </div>
-        </div>
-        <figcaption><h3>Live Feed</h3><p>Post to the people around you. Posts stay up for 7 days.</p></figcaption>
-      </figure>
-
-      <figure class="slide" style="margin:0">
-        <div class="phone" role="img" aria-label="Chat: a conversation between two matches planning to get coffee.">
-          <div class="screen dark" aria-hidden="true">
+<div class="screen dark scr show" style="--i:3" aria-hidden="true">
             <div class="status"><span>9:41</span><b></b></div>
             <div class="body">
               <div class="thread-head"><i class="av a1">M</i><div><b>Maya</b><small>Matched today</small></div></div>
@@ -784,13 +774,7 @@
               <span class="tab"><svg><use href="#i-person"/></svg>Profile</span>
             </div>
           </div>
-        </div>
-        <figcaption><h3>Chat</h3><p>Message your matches and friends. You decide who can start a chat.</p></figcaption>
-      </figure>
-
-      <figure class="slide" style="margin:0">
-        <div class="phone" role="img" aria-label="Profile: a photo, name, town, short bio, interests and what the person is looking for.">
-          <div class="screen dark" aria-hidden="true">
+<div class="screen dark scr show" style="--i:4" aria-hidden="true">
             <div class="status"><span>9:41</span><b></b></div>
             <div class="body">
               <div class="me">
@@ -814,10 +798,17 @@
               <span class="tab on"><svg><use href="#i-person"/></svg>Profile</span>
             </div>
           </div>
+            </div>
+          </div>
         </div>
-        <figcaption><h3>Your profile</h3><p>Show what you want to. Hidden details are never sent to anyone else.</p></figcaption>
-      </figure>
-
+        <ol class="caps">
+        <li class="cap" style="--i:0"><h3>Locals</h3><p>Everyone nearby, closest first, with a rough distance.</p></li>
+        <li class="cap" style="--i:1"><h3>Meet</h3><p>Swipe, match when it is mutual, and play the guessing game.</p></li>
+        <li class="cap" style="--i:2"><h3>Live Feed</h3><p>Post to the people around you. Posts stay up for 7 days.</p></li>
+        <li class="cap" style="--i:3"><h3>Chat</h3><p>Message your matches and friends. You decide who can start a chat.</p></li>
+        <li class="cap" style="--i:4"><h3>Your profile</h3><p>Show what you want to. Hidden details are never sent to anyone else.</p></li>
+        </ol>
+      </div>
     </div>
   </section>
 
