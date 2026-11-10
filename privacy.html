@@ -18,6 +18,12 @@
   The re-signup block (3 years, sections 5 and 6) must match
   private.resignup_block_limits (supabase migration 20261016220000).
   CONTACT EMAIL appears in several places: search for "ctraenk@darkmatterits.com".
+  Discuss rows (sections 3 and 5) must match private.discuss_post_lifetime (7 days) and the
+  'discuss-retention' job (30 days; open, in-review and legal-hold reports keep a post)
+  in supabase migrations 20261110000000 and 20261110020000. Live rows must match the
+  'live-retention' job (30 days after a stream ends) and the start-location delete in
+  private.finish_live_stream (supabase migration 20261110100000). Live video is NOT
+  recorded: there is no LiveKit egress. If recording is ever added, this page must change first.
 -->
 <style>
   :root { color-scheme: light dark; --fg: #1f1b18; --bg: #ffffff; --muted: #5d554f; --link: #b4441a; }
@@ -36,7 +42,7 @@
 <body>
 <main>
 <h1>RoundMe Privacy Policy</h1>
-<p class="meta">Last updated: October 20, 2026</p>
+<p class="meta">Last updated: November 10, 2026</p>
 
 <p>RoundMe is a social app for meeting people nearby. It is run by Dark Matter ITS in New Jersey, USA ("we", "us"). This policy explains what we collect, why, who sees it, and the choices you have. RoundMe is for people 18 and older.</p>
 
@@ -48,7 +54,8 @@
 <tr><td>Profile</td><td>Display name, gender, who you are looking for, bio, interests, your town, and the optional details you add: height, weight, relationship status, smoking, drinking and education. You choose which of these other people can see.</td></tr>
 <tr><td>Photos</td><td>Profile photos and photos you attach to posts. Location data embedded in a photo is removed before upload.</td></tr>
 <tr><td>Location</td><td>Your location, only while the app is open (never in the background), used to find people and posts near you. Before we store it, we round it to the middle of a square about a quarter of a mile across, so we never keep your exact position. It is stored privately and never shown to other people. They see only your town and a rough distance such as "within 5 miles". A post you make remembers where it was made (also rounded), in the same private way.</td></tr>
-<tr><td>Content and activity</td><td>Posts, replies, likes, chat messages, friend requests, swipes, matches and guesses in the Meet game, people you block, and reports you file.</td></tr>
+<tr><td>Content and activity</td><td>Posts, replies, likes, chat messages, friend requests, swipes, matches and guesses in the Meet game, people you block, and reports you file. In <em>Discuss</em>: the topic posts and replies you write. A Discuss post remembers where it was made (rounded, stored privately), like any other post.</td></tr>
+<tr><td>Live streams</td><td>When you go live: the title you give the stream, when it started and ended, and where you were when you started it (rounded, stored privately, and deleted as soon as the stream ends). While a stream is on we also record who is watching (to show a viewer count), the chat messages and "joined" lines in it, and how many hearts it received. <strong>Your camera and microphone are used only while you are live</strong>, and only after you allow them. We do not record or store the video or sound of a stream.</td></tr>
 <tr><td>Device and notifications</td><td>A push-notification token for your phone and basic device information, so we can send notifications you have allowed.</td></tr>
 <tr><td>App error reports</td><td>If the app crashes or hits an error, it sends us a short report: the error message and technical trace, the screen you were on, your app version, update and operating system, and when and how often it happened. Each report carries a random code the app makes the first time it opens. The code is not your account and other users never see it, but it identifies your copy of the app, so we treat it as personal information. We do not store your name or account with the report. We remove email addresses, sign-in tokens and long numbers from the text before keeping it, but this is not perfect, so a report could still contain something personal. We also keep a counter for your account, with no report content in it, to stop one account sending too many reports.</td></tr>
 <tr><td>Technical data</td><td>Our hosting provider keeps standard server logs (such as IP address and request times) for security and troubleshooting.</td></tr>
@@ -66,6 +73,8 @@
 <ul>
 <li><strong>Other users</strong> see your name, age, photos, town, rough distance, and the profile details you have not hidden. Hidden details are not sent to other people.</li>
 <li>Posts and replies are visible to nearby people who are allowed to see them. Posts leave the feed after 7 days.</li>
+<li><strong>Discuss</strong> posts and replies are visible to people who open that topic and are allowed to see them: by default people near you, but anyone can choose to see posts from farther away. Next to a Discuss post others see your name, photo, age, gender (unless you hid it on your profile) and a rough distance. Discuss posts leave the topic after 7 days.</li>
+<li><strong>Live streams</strong> can be watched, live, by anyone who is allowed to see you, near or far; people you have blocked, and people who blocked you, cannot. Viewers see your name, photo, age, the stream title, a rough distance and the live video and sound. Everyone in a stream sees its chat, including the name of each person who writes or joins.</li>
 <li>Messages are visible to the people in that conversation. They are protected in transit but are not end-to-end encrypted.</li>
 <li><strong>Photos are served from public web links.</strong> Anyone who has a photo's link can open it until the photo is deleted, even though the link is hard to guess and we do not list photos publicly.</li>
 <li>People you block cannot see or contact you, and you do not see them.</li>
@@ -75,6 +84,7 @@
 <ul>
 <li><strong>Supabase</strong>: hosting, database, sign-in and photo storage.</li>
 <li><strong>Google</strong>: Google sign-in (if you choose it) and Firebase Cloud Messaging for Android notifications.</li>
+<li><strong>LiveKit</strong>: carries the video and sound of live streams between the person who is live and their viewers. It receives your account's ID and display name for the stream, and the video and sound pass through its servers while you are live; it does not keep a recording for us.</li>
 <li><strong>Expo</strong>: delivers push notifications. The text of a notification, such as a message preview or someone's name, passes through Expo's and Google's servers to reach your phone. You can turn notifications off in your phone's settings.</li>
 </ul>
 <p>These companies may only use your information to provide their service to us. We may also share information when the law requires it, to respond to valid legal requests, or to protect someone's safety.</p>
@@ -87,6 +97,8 @@
 <tr><td>Records of location updates we ignored (for example, one that implied impossible travel speed)</td><td>30 days</td></tr>
 <tr><td>Meet game rounds and guesses</td><td>30 days after the round ends</td></tr>
 <tr><td>Notifications</td><td>90 days (friend requests stay while they are waiting for an answer)</td></tr>
+<tr><td>Discuss posts and their replies</td><td>Deleted 30 days after the post was made, including a post you removed earlier. A post or reply that someone has reported is kept while the report is being reviewed or held for a legal reason.</td></tr>
+<tr><td>Live streams, with their chat, viewer list and hearts</td><td>30 days after the stream ends. Where you started the stream is deleted as soon as it ends.</td></tr>
 <tr><td>Reports we reviewed and dismissed, and our record of that decision</td><td>12 months after the decision</td></tr>
 <tr><td>Reports that led to action, and our other moderation records (for example, a suspension)</td><td>3 years after the decision or the record</td></tr>
 <tr><td>A one-way scrambled code of the email address of an account we deleted after a serious or repeated violation of our Terms. It cannot be turned back into the address.</td><td>3 years</td></tr>
@@ -96,7 +108,7 @@
 <ul>
 <li><strong>Posts</strong> stay until you delete them or delete your account. A post you delete disappears from the app, but its text may stay in our database until your account is deleted.</li>
 <li><strong>Messages</strong> stay until an account in the conversation is deleted. Deleting a conversation in the app only hides it for you; the other person still sees it, and we still keep it. When either person deletes their account, the whole conversation is deleted for both.</li>
-<li>When you delete your account in <em>Settings &gt; Delete account</em>, your profile, photos, posts, messages and activity are deleted. Copies may remain in backups for a limited time before they expire.</li>
+<li>When you delete your account in <em>Settings &gt; Delete account</em>, your profile, photos, posts, Discuss posts and replies, live streams and their chat, messages and activity are deleted. Copies may remain in backups for a limited time before they expire.</li>
 <li><strong>Reports and moderation records are kept after an account is deleted</strong>, for the times above, including a record of what was reported, so we can protect other people and respond to abuse.</li>
 </ul>
 
