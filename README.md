@@ -9,6 +9,7 @@ This repository is RoundMe's public website at https://roundme.darkmatterits.com
 | `index.html` | The landing page. One self-contained file with no JavaScript. The phone screens in its carousel are drawn in HTML/CSS with made-up people; the header comment in the file explains how to keep them in step with the app. |
 | `privacy.html` | The privacy policy. |
 | `terms.html` | The terms of service. |
+| `child-safety.html` | The child safety standards (CSAE policy). Google Play links to it from Play Console > App content > Child safety standards, so keep it at `/child-safety`. Unlike the privacy and terms pages, it has no copy in `roundMe`. |
 | `auth-callback/index.html` | What a browser shows at `/auth-callback` when an emailed sign-in link is opened somewhere other than the app (see Android App Links below). |
 | `.well-known/assetlinks.json` | The file that lets Android hand `https://roundme.darkmatterits.com/auth-callback` links straight to the app. |
 | `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | The tab icon: the app logo (from `assets/branding/` in `roundMe`). The `.ico` also serves `privacy.html` and `terms.html`, which browsers check for at `/favicon.ico`. |
